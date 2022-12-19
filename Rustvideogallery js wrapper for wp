@@ -1,0 +1,33 @@
+// Instantiate the WebAssembly module
+const wasmModule = new WebAssembly.Module(wasmCode);
+const wasmInstance = new WebAssembly.Instance(wasmModule);
+
+// Define a function to create a new Video object from JavaScript data
+function createVideo(title, description, url, videoThumbnail) {
+  return {
+    title: title,
+    description: description,
+    url: url,
+    videoThumbnail: videoThumbnail,
+  };
+}
+
+// Define a function to generate the HTML for a video gallery
+function generateVideoGallery(videos, currentIndex) {
+  // Convert the JavaScript videos array to a Rust-compatible array
+  const rustVideos = videos.map(video => createVideo(video.title, video.description, video.url, video.videoThumbnail));
+  const rustVideosArray = Rust.default.Vec.new(rustVideos);
+
+  // Call the generate_video_gallery function from the WebAssembly module
+  const result = wasmInstance.exports.generate_video_gallery(rustVideosArray, currentIndex);
+
+  // Return the result as a JavaScript string
+  return result.unwrap();
+}
+
+// Example usage: generate the HTML for a video gallery and insert it into the page
+const videoGalleryHTML = generateVideoGallery([
+  { title: "Video 1", description: "A video about Rust", url: "https://example.com/video1.mp4", videoThumbnail: "https://example.com/thumbnail1.jpg" },
+  { title: "Video 2", description: "A video about WebAssembly", url: "https://example.com/video2.mp4", videoThumbnail: "https://example.com/thumbnail2.jpg" },
+], 0);
+document.body.innerHTML = videoGalleryHTML;
