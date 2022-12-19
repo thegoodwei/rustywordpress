@@ -1,0 +1,72 @@
+// Import the `wasm_bindgen` crate and the `prelude` module
+extern crate wasm_bindgen;
+use wasm_bindgen::prelude::*;
+
+// Define the `Video` struct
+#[derive(Clone, Debug)]
+struct Video {
+    title: String,
+    description: String,
+    url: String,
+}
+
+// Generate HTML for a single video
+fn generate_video_html(video: &Video) -> Result<String, String> {
+    // Check that the video has required fields
+    if video.title.is_empty() || video.description.is_empty() || video.url.is_empty() {
+        return Err("Video is missing required fields".to_string());
+    }
+
+    // Generate the HTML
+    let html = format!("
+        <div class='video'>
+            <h2>{}</h2>
+            <video src='{}' controls></video>
+            <p>{}</p>
+        </div>
+    ", video.title, video.url, video.description);
+    Ok(html)
+}
+
+// Generate HTML for a gallery of videos
+fn generate_video_gallery_html(videos: &[Video], current_index: usize) -> Result<String, String> {
+    // Initialize an empty string for the HTML
+    let mut html = String::new();
+
+    // Iterate through the videos and add the HTML for the current video
+    for (i, video) in videos.iter().enumerate() {
+        if i == current_index {
+            let video_html = generate_video_html(video)?;
+            html.push_str(&video_html);
+        }
+    }
+
+    // If there is a next video, add a "next" button to the HTML
+    if current_index < videos.len() - 1 {
+        html.push_str("<button class='next' onclick='showNextVideo()'>→</button>");
+    }
+
+    Ok(html)
+}
+
+// Wrapper function for `generate_video_gallery_html` that can be called from JavaScript
+#[wasm_bindgen]
+pub fn generate_video_gallery(videos: &[Video], current_index: usize) -> Result<String, String> {
+    generate_video_gallery_html(videos, current_index)
+}
+
+// Get the index of the next video in the slice
+#[wasm_bindgen]
+pub fn show_next_video(videos: &[Video], current_index: usize) -> Result<usize, String> {
+    // Check that the current index is within range
+    if current_index >= videos.len() {
+        return Err("Current index is out of range".to_string());
+    }
+
+    // Calculate the index of the next video
+    let next_index = current_index + 1;
+    if next_index >= videos.len() {
+        return Ok(current_index);
+    }
+    Ok(next_index)
+}
