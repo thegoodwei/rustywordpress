@@ -1,23 +1,22 @@
-// Import the `wasm_bindgen` crate and the `prelude` module
 extern crate wasm_bindgen;
 use wasm_bindgen::prelude::*;
 
-// Define the `Video` struct
 #[derive(Clone, Debug)]
 struct Video {
     title: String,
     description: String,
     url: String,
+    videoThumbnail: String,
 }
 
-// Generate HTML for a single video
-fn generate_video_html(video: &Video) -> Result<String, String> {
-    // Check that the video has required fields
+#[wasm_bindgen]
+pub fn generate_video_html(video: &Video) -> Result<String, String> {
+    // Check if the video is missing any required fields
     if video.title.is_empty() || video.description.is_empty() || video.url.is_empty() {
         return Err("Video is missing required fields".to_string());
     }
 
-    // Generate the HTML
+    // Generate the HTML for the video
     let html = format!("
         <div class='video'>
             <h2>{}</h2>
@@ -28,45 +27,48 @@ fn generate_video_html(video: &Video) -> Result<String, String> {
     Ok(html)
 }
 
-// Generate HTML for a gallery of videos
-fn generate_video_gallery_html(videos: &[Video], current_index: usize) -> Result<String, String> {
-    // Initialize an empty string for the HTML
-    let mut html = String::new();
-
-    // Iterate through the videos and add the HTML for the current video
-    for (i, video) in videos.iter().enumerate() {
-        if i == current_index {
-            let video_html = generate_video_html(video)?;
-            html.push_str(&video_html);
-        }
+#[wasm_bindgen]
+pub fn generate_thumbnail_html(video: &Video) -> Result<String, String> {
+    // Check if the video is missing any required fields
+    if video.title.is_empty() || video.description.is_empty() || video.url.is_empty() || video.videoThumbnail.is_empty() {
+        return Err("Video is missing required fields".to_string());
     }
 
-    // If there is a next video, add a "next" button to the HTML
-    if current_index < videos.len() - 1 {
-        html.push_str("<button class='next' onclick='showNextVideo()'>→</button>");
+    // Generate the HTML for the thumbnail
+    let html = format!("
+        <div class='thumbnail'>
+            <img src='{}' alt='{}'>
+            <h3>{}</h3>
+        </div>
+    ", video.videoThumbnail, video.title, video.title);
+    Ok(html)
+}
+
+#[wasm_bindgen]
+pub fn generate_thumbnail_gallery_html(videos: &[Video], current_index: usize) -> Result<String, String> {
+    let mut html = String::new();
+    // Generate the HTML for each thumbnail in the gallery, skipping the current video
+    for (i, video) in videos.iter().enumerate() {
+        if i == current_index {
+            continue;
+        }
+
+        let thumbnail_html = generate_thumbnail_html(video)?;
+        html.push_str(&thumbnail_html);
     }
 
     Ok(html)
 }
 
-// Wrapper function for `generate_video_gallery_html` that can be called from JavaScript
 #[wasm_bindgen]
-pub fn generate_video_gallery(videos: &[Video], current_index: usize) -> Result<String, String> {
-    generate_video_gallery_html(videos, current_index)
+pub fn generate_video_gallery_html(videos: &[Video], current_index: usize) -> Result<String, String> {
+    // Generate the HTML for the video and thumbnail gallery
+    let video_html = generate_video_html(&videos[current_index])?;
+    let thumbnail_html = generate_thumbnail_gallery_html(videos, current_index)?;
+    let html = format!("{}{}", video_html, thumbnail_html);
+    Ok(html)
 }
 
-// Get the index of the next video in the slice
 #[wasm_bindgen]
-pub fn show_next_video(videos: &[Video], current_index: usize) -> Result<usize, String> {
-    // Check that the current index is within range
-    if current_index >= videos.len() {
-        return Err("Current index is out of range".to_string());
-    }
+pub fn generate_video_gallery(videos:
 
-    // Calculate the index of the next video
-    let next_index = current_index + 1;
-    if next_index >= videos.len() {
-        return Ok(current_index);
-    }
-    Ok(next_index)
-}
