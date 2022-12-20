@@ -322,3 +322,183 @@ Copy code
 
 I hope this helps! Let me know if you have any questions or if you'd like more information.
 
+Can you print the code only?
+
+Certainly! Here is the modified template for a Rust app using Yew, wasm_bindgen, and web3 that fits the requirements of the WordPress WebAssembly (Wasm) plugin, with detailed comments explaining each step:
+
+Copy code
+use yew::{html, Callback, ClickEvent, Component, ComponentLink, Html, ShouldRender};
+use wasm_bindgen::prelude::*;
+use web3::{
+    contract::{Contract, Options},
+    transports::Http,
+    types::{Address, U256},
+    Web3,
+};
+
+// We need to define the Message type as a trait object so that it can be passed
+// between Rust and JavaScript
+#[wasm_bindgen]
+#[derive(Clone, Debug)]
+pub enum Message {
+    Click,
+    Load,
+}
+
+#[wasm_bindgen]
+pub struct App {
+    web3: Web3<Http>,
+    contract: Option<Contract<Http>>,
+    accounts: Vec<Address>,
+    value: U256,
+    // We need to store the callback as a trait object, since we can't directly
+    // pass a Rust callback to JavaScript
+    callback: Box<dyn Fn(Message)>,
+}
+
+impl App {
+    fn new(callback: Box<dyn Fn(Message)>) -> App {
+        let callback_ref: &dyn Fn(Message) = &*callback;
+        let callback = callback.clone();
+        let web3 = Web3::new(Http::new("http://localhost:8545").expect("invalid host"));
+        let contract = None;
+        let accounts = Vec::new();
+        let value = U256::zero();
+
+        App {
+            web3,
+            contract,
+            accounts,
+            value,
+            callback,
+        }
+    }
+
+    fn update(&mut self, msg: Message) -> bool {
+        match msg {
+            Message::Click => {
+                let contract = self.contract.as_ref().expect("contract not loaded");
+                let accounts = self.accounts.as_ref();
+                let value = self.value;
+                let result = contract.functions().set(value).call(accounts[0]).wait();
+                match result {
+                    Ok(()) => println!("Success!"),
+                    Err(e) => println!("Error: {:?}", e),
+                }
+            }
+            Message::Load => {
+                let web3 = self.web3.clone();
+                let contract_address: Address = "0x123...".parse().expect("invalid contract address");
+                let contract = Contract::from_json(
+                    web3,
+                    contract_address,
+                    include_bytes!("contract.json"),
+                )
+                .expect("failed to load contract");
+                self.contract = Some(contract);
+                let accounts = web3.eth().accounts().wait().expect("failed to get accounts");
+                self.accounts = accounts;
+            }
+        }
+        true
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <button onclick=&self.callback>{ "Click me!" }</button>
+        }
+    }
+}
+
+#[wasm_bindgen]
+pub fn run_app(callback: Box<
+
+
+
+Wade B
+Continue 
+
+Certainly! Here is the rest of the modified template for a Rust app using Yew, wasm_bindgen, and web3 that fits the requirements of the WordPress WebAssembly (Wasm) plugin:
+
+Copy code
+#[wasm_bindgen]
+pub fn run_app(callback: Box<dyn Fn(Message)>) {
+    App::new(callback).mount_to_body();
+}
+To use this modified template with the WordPress WebAssembly plugin, you will need to compile it to WebAssembly (Wasm) and include it in your WordPress plugin.
+
+First, make sure that you have wasm-pack installed. You can install it by running the following command:
+
+Copy code
+cargo install wasm-pack
+Then, navigate to the root directory of your Rust project and run the following command to generate the WebAssembly (Wasm) file:
+
+Copy code
+wasm-pack build
+This will generate a pkg directory containing the Wasm file and other necessary files.
+
+Next, create a new WordPress plugin and include the Wasm file in it. You can do this by placing the Wasm file in the plugin's directory and using the wp_enqueue_script function to include it in the plugin.
+
+Here is an example of how you could include the Wasm file in your WordPress plugin:
+
+Copy code
+function enqueue_wasm_scripts() {
+    // Include the Wasm file in the plugin
+    wp_enqueue_script(
+        'wasm-module',
+        plugin_dir_url(__FILE__) . '/pkg/wasm_module.wasm',
+        array(),
+        false
+    );
+}
+add_action('wp_enqueue_scripts', 'enqueue_wasm_scripts');
+Then, you can use the wp_add_inline_script function to call the run_app function from your WordPress plugin. You will need to pass a JavaScript callback function to the run_app function, which will be called whenever a message is received from the Rust code.
+
+Here is an example of how you could call the run_app function from your WordPress plugin:
+
+Copy code
+function add_inline_scripts() {
+    // Define the callback function that will be called by the Rust code
+    $callback = 'function(msg) { console.log(msg); }';
+    
+    // Call the run_app function from the Wasm module, passing the callback function
+    wp_add_inline_script(
+        'wasm-module',
+        'wasm.run_app(' . $callback . ');',
+        'before'
+    );
+}
+add_action('wp_enqueue_scripts', 'add_inline_scripts');
+I hope this helps! Let me know if you have any questions or if you'd like more information.
+
+
+
+
+Wade B
+Will this work with the WordPress webAssembly plugin? Show me that first. 
+
+It is possible to use the modified template for a Rust app using Yew, wasm_bindgen, and web3 with the WordPress WebAssembly (Wasm) plugin, but you will need to follow the steps that I provided to integrate the template into a WordPress plugin and include it in your WordPress site.
+
+To use the modified template with the WordPress WebAssembly plugin, you will need to compile it to WebAssembly (Wasm) and include it in your WordPress plugin. You can do this by using the wasm-pack tool to generate the Wasm file and the wp_enqueue_script function to include it in your WordPress plugin.
+
+Then, you can use the wp_add_inline_script function to call the run_app function from your WordPress plugin. You will need to pass a JavaScript callback function to the run_app function, which will be called whenever a message is received from the Rust code.
+
+I hope this helps! Let me know if you have any questions or if you'd like more information.
+
+
+
+
+Wade B
+What did you mean when you said "Then, you can use the wp_add_inline_script function to call the run_app function from your WordPress plugin. You will need to pass a JavaScript callback function to the run_app function, which will be called whenever a message is received from the Rust code."
+
+When I said "Then, you can use the wp_add_inline_script function to call the run_app function from your WordPress plugin," I meant that you can use the wp_add_inline_script function in your WordPress plugin to call the run_app function that is defined in the WebAssembly (Wasm) module that you included in your plugin. This will allow you to start running the Rust code in your plugin.
+
+The wp_add_inline_script function takes three arguments: the handle of the script to which the inline script should be added, the inline script to be added, and the position of the script in the page (either 'before' or 'after'). In this case, you would pass the handle of the Wasm module as the first argument, a string containing a call to the run_app function as the second argument, and 'before' as the third argument.
+
+You will need to pass a JavaScript callback function to the run_app function as an argument. This callback function will be called whenever a message is received from the Rust code. The Rust code uses the callback function to communicate with the JavaScript code, allowing you to interact with the Rust code from your WordPress plugin.
+
+I hope this helps! Let me know if you have any questions or if you'd like more information.
+
+
+
+
