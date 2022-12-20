@@ -485,3 +485,178 @@ impl Component for Model {
 
 Wade B
 Keep going
+Certainly! Here is the rest of the complete example Rust project:
+
+Copy code
+...
+                    <section class="dashboard">
+                        <h3>{"Dashboard"}</h3>
+                        <p>{"This is the dashboard section of the app."}</p>
+                        { self.login_state.is_logged_in
+                            .map(|_| html! {
+                                <p>{"You are logged in with Ethereum."}</p>
+                            })
+                            .unwrap_or_else(|| html! {
+                                <p>{"You are not logged in with Ethereum."}</p>
+                            })
+                        }
+                    </section>
+                </main>
+            </div>
+        }
+    }
+}
+
+fn main() {
+    yew::start_app::<Model>();
+}
+In this example, the Model struct represents the root component of the app and has fields for a Web3 instance and the login state. The Msg enum defines the possible messages that the component can receive, and the update() method handles the messages and updates the model state accordingly.
+
+The view() method returns the HTML for the app, which includes a header with a login button, and a main section with an image banner and a dashboard. The login button and the content in the dashboard section are only shown if the user is logged in, as indicated by the login_state.is_logged_in field.
+
+I hope this helps! Let me know if you have any questions or if you need further assistance.
+
+
+
+
+Wade B
+Make sure the login button is always visable if the user is not logged in. Hide the login button if login_state.is_logged_in 
+
+To make sure the login button is always visible if the user is not logged in, you can use the unwrap_or_else() method on the Option returned by the is_logged_in field, and return the HTML for the login button in the closure passed to unwrap_or_else().
+
+Here is an example of how you can modify the view() method to achieve this:
+
+Copy code
+fn view(&self) -> Html {
+    html! {
+        <div class="app">
+            <header>
+                <h1>{"My Ethereum App"}</h1>
+                { self.login_state.is_logged_in
+                    .map(|_| html! {
+                        <button onclick=|_| Msg::Logout>{"Log Out"}</button>
+                    })
+                    .unwrap_or_else(|| html! {
+                        <button onclick=|_| Msg::Login>{"Log In"}</button>
+                    })
+                }
+            </header>
+            <main>
+                <section class="image-banner">
+                    <img src="/images/banner.jpg" alt="Banner Image" />
+                    <div class="text">
+                        <h2>{"Welcome to My Ethereum App"}</h2>
+                        <p>{"This is a demo app built with Rust and Ethereum."}</p>
+                    </div>
+                </section>
+                <section class="dashboard">
+                    <h3>{"Dashboard"}</h3>
+                    <p>{"This is the dashboard section of the app."}</p>
+                    { self.login_state.is_logged_in
+                        .map(|_| html! {
+                            <p>{"You are logged in with Ethereum."}</p>
+                        })
+                        .unwrap_or_else(|| html! {
+                            <p>{"You are not logged in with Ethereum."}</p>
+                        })
+                    }
+                </section>
+            </main>
+        </div>
+    }
+}
+I hope this helps! Let me know if you have any questions or if you need further assistance.
+
+
+
+
+Regenerate response
+
+ChatGPTCertainly! Here is the rest of the complete example Rust project:
+
+Copy code
+...
+                    <section class="dashboard">
+                        <h3>{"Dashboard"}</h3>
+                        <p>{"This is the dashboard section of the app."}</p>
+                        { self.login_state.is_logged_in
+                            .map(|_| html! {
+                                <p>{"You are logged in with Ethereum."}</p>
+                            })
+                            .unwrap_or_else(|| html! {
+                                <p>{"You are not logged in with Ethereum."}</p>
+                            })
+                        }
+                    </section>
+                </main>
+            </div>
+        }
+    }
+}
+
+fn main() {
+    yew::start_app::<Model>();
+}
+In this example, the Model struct represents the root component of the app and has fields for a Web3 instance and the login state. The Msg enum defines the possible messages that the component can receive, and the update() method handles the messages and updates the model state accordingly.
+
+The view() method returns the HTML for the app, which includes a header with a login button, and a main section with an image banner and a dashboard. The login button and the content in the dashboard section are only shown if the user is logged in, as indicated by the login_state.is_logged_in field.
+
+I hope this helps! Let me know if you have any questions or if you need further assistance.
+
+
+
+
+Wade B
+Make sure the login button is always visable if the user is not logged in. Hide the login button if login_state.is_logged_in 
+
+To make sure the login button is always visible if the user is not logged in, you can use the unwrap_or_else() method on the Option returned by the is_logged_in field, and return the HTML for the login button in the closure passed to unwrap_or_else().
+
+Here is an example of how you can modify the view() method to achieve this:
+
+Copy code
+fn view(&self) -> Html {
+    html! {
+        <div class="app">
+            <header>
+                <h1>{"My Ethereum App"}</h1>
+                { self.login_state.is_logged_in
+                    .map(|_| html! {
+                        <button onclick=|_| Msg::Logout>{"Log Out"}</button>
+                    })
+                    .unwrap_or_else(|| html! {
+                        <button onclick=|_| Msg::Login>{"Log In"}</button>
+                    })
+                }
+            </header>
+            <main>
+                <section class="image-banner">
+                    <img src="/images/banner.jpg" alt="Banner Image" />
+                    <div class="text">
+                        <h2>{"Welcome to My Ethereum App"}</h2>
+                        <p>{"This is a demo app built with Rust and Ethereum."}</p>
+                    </div>
+                </section>
+                <section class="dashboard">
+                    <h3>{"Dashboard"}</h3>
+                    <p>{"This is the dashboard section of the app."}</p>
+                    { self.login_state.is_logged_in
+                        .map(|_| html! {
+                            <p>{"You are logged in with Ethereum."}</p>
+                        })
+                        .unwrap_or_else(|| html! {
+                            <p>{"You are not logged in with Ethereum."}</p>
+                        })
+                    }
+                </section>
+            </main>
+        </div>
+    }
+}
+I hope this helps! Let me know if you have any questions or if you need further assistance.
+
+
+
+
+Regenerate response
+
+ChatGPT
