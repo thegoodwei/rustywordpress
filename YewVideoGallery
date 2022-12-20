@@ -1,0 +1,111 @@
+use yew::{html, Callback, Html, MouseEvent};
+use yew::services::fetch::{FetchTask, Request, Response, FetchService};
+use wasm_bindgen::prelude::*;
+
+// Define a struct to represent a video in the gallery
+#[wasm_bindgen]
+#[derive(Clone, Debug)]
+pub struct Video {
+    // The title of the video
+    pub title: String,
+    // The description of the video
+    pub description: String,
+    // The URL of the video
+    pub url: String,
+    // The URL of the thumbnail image for the video
+    pub video_thumbnail: String,
+}
+
+// Define the main component for the video gallery
+#[wasm_bindgen]
+pub struct VideoGallery {
+    // The list of videos in the gallery
+    pub videos: Vec<Video>,
+    // The index of the currently-selected video
+    pub current_index: usize,
+    // The Fetch service used to fetch data from the server
+    fetch_service: FetchService,
+    // The FetchTask used to fetch the list of videos
+    fetch_task: Option<FetchTask>,
+    // The callback to be called when a thumbnail is clicked
+    pub onclick_callback: Callback<usize>,
+}
+
+// Define the messages that the component can receive
+#[wasm_bindgen]
+#[derive(Clone, Debug)]
+pub enum Msg {
+    // The data for the list of videos has been fetched
+    VideoDataFetched(Vec<Video>),
+    // A thumbnail has been clicked
+    VideoClicked(usize),
+}
+
+// Define the properties for the component
+#[wasm_bindgen]
+#[derive(PartialEq, Clone)]
+pub struct Props {
+    // The callback to be called when a thumbnail is clicked
+    pub onclick: Callback<usize>,
+}
+
+impl yew::Component for VideoGallery {
+    type Message = Msg;
+    type Properties = Props;
+
+
+
+
+   fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
+        // Initialize the component with the callback and a Fetch service
+        let callback = props.onclick;
+        let fetch_service = FetchService::new();
+        // Fetch the list of videos from the server
+        let task = fetch_service.fetch(
+            Request::get("/api/videos").body(None).unwrap(),
+            link.callback(|response: Response<Json<Result<Vec<Video>, Error>>>| {
+                let (meta, Json(data)) = response.into_parts();
+                if meta.status.is_success() {
+                    // If the request was successful, return the list of videos
+                    Msg::VideoDataFetched(data.unwrap())
+                } else {
+                    // If the request was unsuccessful, return an empty list of videos
+                    Msg::VideoDataFetched(Vec::new())
+                }
+            }),
+        );
+        VideoGallery {
+            videos: Vec::new(),
+            current_index: 0,
+            fetch_service,
+            fetch_task: Some(task),
+            onclick_callback: callback,
+        }
+    }
+
+
+   fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::VideoDataFetched(videos) => {
+                // Update the list of videos and clear the FetchTask
+                self.videos = videos;
+                self.fetch_task = None;
+                true
+            }
+            Msg::VideoClicked(index) => {
+                // Update the current index when a thumbnail is clicked
+                self.current_index = index;
+                true
+            }
+        }
+    }
+
+
+    fn view(&self) -> Html {
+        html! {
+            <div class="video-gallery">
+                {self.view_video()}
+                {self.view_thumbnails()}
+            </div>
+        }
+    }
