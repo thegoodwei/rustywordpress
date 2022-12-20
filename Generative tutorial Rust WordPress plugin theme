@@ -474,6 +474,376 @@ impl Component for App {
     }
 This is the implementation of the Component trait for the App struct. It specifies the type of messages and
 
+To add CSS styling to your theme, you can use the style! macro in your Rust code. The style! macro allows you to define CSS styles using Rust syntax, which will be automatically converted to CSS when your code is compiled.
+
+Here is an example of how you can use the style! macro to style your theme:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add any state variables you need here
+}
+
+// Define the message type for your app
+enum AppMessage {
+    // Add any message variants you need here
+}
+
+// Define your app's main component
+struct App {
+    state: AppState,
+}
+
+// Implement the `Component` trait for your app
+impl Component for App {
+    type Message = AppMessage;
+    type Properties = ();
+
+    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+        App {
+            // Initialize your app's state here
+            state: AppState {},
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        //
+
+
+
+Wade B
+Keep going!
+
+Sure! Here is the rest of the example code showing how you can use the style! macro to style your WordPress theme using Yew:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add any state variables you need here
+}
+
+// Define the message type for your app
+enum AppMessage {
+    // Add any message variants you need here
+}
+
+// Define your app's main component
+struct App {
+    state: AppState,
+}
+
+// Implement the `Component` trait for your app
+impl Component for App {
+    type Message = AppMessage;
+    type Properties = ();
+
+    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+        App {
+            // Initialize your app's state here
+            state: AppState {},
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        // Handle messages and update your app's state here
+        match msg {
+            _ => {}
+        }
+        true
+    }
+
+    fn view(&self) -> Html {
+        // Use the `style!` macro to define your theme's CSS styles
+        let style = style! {
+            // Add your CSS code here
+            h1 {
+                color: blue;
+                font-size: 24px;
+            }
+            p {
+                color: green;
+                font-size: 18px;
+            }
+        };
+
+        // Use the `html!` macro to define your theme's templates
+        html! {
+            // Add your HTML code here
+            <div>
+                <h1>{"Welcome to my WordPress theme"}</h1>
+                <p>{"This is my custom theme built with Yew"}</p>
+            </div>
+        }
+    }
+}
+
+// Run your app
+fn main() {
+    yew::start_app::<App>();
+}
+To add JavaScript functionality to your theme, you can use the script! macro in your Rust code. The script! macro allows you to define JavaScript code using Rust syntax, which will be automatically converted to JavaScript when your code is compiled.
+
+Here is an example of how you can use the script! macro to add JavaScript functionality to your theme:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add any state variables you need here
+}
+
+// Define the
+
+
+
+Wade B
+Continue 
+
+Sure! Here is the rest of the example code showing how you can use the script! macro to add JavaScript functionality to your WordPress theme using Yew:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add any state variables you need here
+}
+
+// Define the message type for your app
+enum AppMessage {
+    // Add any message variants you need here
+}
+
+// Define your app's main component
+struct App {
+    state: AppState,
+}
+
+// Implement the `Component` trait for your app
+impl Component for App {
+    type Message = AppMessage;
+    type Properties = ();
+
+    fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
+        App {
+            // Initialize your app's state here
+            state: AppState {},
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        // Handle messages and update your app's state here
+        match msg {
+            _ => {}
+        }
+        true
+    }
+
+    fn view(&self) -> Html {
+        // Use the `style!` macro to define your theme's CSS styles
+        let style = style! {
+            // Add your CSS code here
+            h1 {
+                color: blue;
+                font-size: 24px;
+            }
+            p {
+                color: green;
+                font-size: 18px;
+            }
+        };
+
+        // Use the `script!` macro to define your theme's JavaScript code
+        let script = script! {
+            // Add your JavaScript code here
+            console.log("Hello from JavaScript!");
+        };
+
+        // Use the `html!` macro to define your theme's templates
+        html! {
+            // Add your HTML code here
+            <div>
+                <h1>{"Welcome to my WordPress theme"}</h1>
+                <p>{"This is my custom theme built with Yew"}</
+
+
+
+Wade B
+Continue 
+
+Sure! To use the Yew macro html! to define your theme's templates, you can nest HTML elements and Rust code inside the html! macro. This allows you to create dynamic templates that can be rendered based on your app's state or other variables.
+
+For example, you can use Rust variables in your templates by enclosing them in curly braces ({}). You can also use Rust control structures, such as if statements and for loops, inside the html! macro to create more complex templates.
+
+Here is an example of how you might use the html! macro to create a dynamic template for your WordPress theme:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add a state variable to store a list of posts
+    posts: Vec<Post>,
+}
+
+// Define a struct for a single post
+struct Post {
+    title: String,
+    content: String,
+}
+
+// Define the message type for your app
+enum AppMessage {
+    // Add a message variant to request posts from the server
+    RequestPosts,
+    // Add a message variant to update the list of posts in the app's state
+    UpdatePosts(Vec<Post>),
+}
+
+// Define your app's main component
+struct App {
+    state: AppState,
+    link: ComponentLink<Self>,
+}
+
+// Implement the `Component` trait for your app
+impl Component for App {
+    type Message = AppMessage;
+    type Properties = ();
+
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        App {
+            // Initialize your app's state here
+            state: AppState { posts: Vec::new() },
+            link,
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        // Handle messages and update your app's state here
+
+
+
+Wade B
+Continue 
+
+Sure! Here is the rest of the example code showing how you can use the html! macro to create a dynamic template for your WordPress theme using Yew:
+
+Copy code
+// Import the necessary crates
+extern crate yew;
+
+use yew::prelude::*;
+
+// Define a struct for your app's state
+struct AppState {
+    // Add a state variable to store a list of posts
+    posts: Vec<Post>,
+}
+
+// Define a struct for a single post
+struct Post {
+    title: String,
+    content: String,
+}
+
+// Define the message type for your app
+enum AppMessage {
+    // Add a message variant to request posts from the server
+    RequestPosts,
+    // Add a message variant to update the list of posts in the app's state
+    UpdatePosts(Vec<Post>),
+}
+
+// Define your app's main component
+struct App {
+    state: AppState,
+    link: ComponentLink<Self>,
+}
+
+// Implement the `Component` trait for your app
+impl Component for App {
+    type Message = AppMessage;
+    type Properties = ();
+
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        App {
+            // Initialize your app's state here
+            state: AppState { posts: Vec::new() },
+            link,
+        }
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        // Handle messages and update your app's state here
+        match msg {
+            AppMessage::RequestPosts => {
+                // Send a request to the server to fetch the list of posts
+                // Update the list of posts in the app's state when the response is received
+                self.link.send_future(async {
+                    let posts = fetch_posts().await;
+                    AppMessage::UpdatePosts(posts)
+                });
+            }
+            AppMessage::UpdatePosts(posts) => {
+                self.state.posts = posts;
+            }
+        }
+        true
+    }
+
+    fn view(&self) -> Html {
+        // Use the `html!` macro to define your theme's templates
+        html! {
+            // Add your HTML code here
+            <div>
+                <h1>{"Welcome to my WordPress theme"}</h1>
+                {
+                    // Use a Rust `for` loop to iterate over the list of posts
+                    for self.state.posts.iter().map(|post| {
+                        // Render a single post template for each post in the list
+                        html! {
+                            <div>
+                                <h2>{&post.title}</h2>
+                                <p>{&post.content}</p>
+                            </div>
+                        }
+                    })
+                }
+            </div>
+        }
+    }
+}
+
+// Run your app
+fn main() {
+    yew::start_app::<App>();
+}
+I hope this example code is helpful as you work on creating a custom WordPress theme using Yew. If you have any specific questions, don't hesitate to ask.
+
+
+
+
 
 
 
