@@ -7,11 +7,12 @@ document.addEventListener("DOMContentLoaded", function() {
 async function run_Wasmrs_App() {
     // Instantiate the WebAssembly module
     const wasmModule = await init();
+const fullpage-app-div = document.getElementById("fullpage-wasm-app");
 
     WebAssembly.instantiateStreaming(fetch('./wasm_app.wasm'))
     .then(({module, instance}) => {
         if (instance.exports.run_Wasmrs_App) {
-            instance.exports.run_Wasmrs_App();
+            instance.exports.run_Wasmrs_App(fullpage-app-div);
         } else {
             console.error("Error: run_Wasmrs_App() function not found in WebAssembly exports.");
         }
