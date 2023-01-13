@@ -8,7 +8,7 @@ async function run_Wasmrs_App() {
     // Instantiate the WebAssembly module
     const wasmModule = await init();
 
-    WebAssembly.instantiateStreaming(fetch('./wasm_module.wasm'))
+    WebAssembly.instantiateStreaming(fetch('./wasm_app.wasm'))
     .then(({module, instance}) => {
         if (instance.exports.run_Wasmrs_App) {
             instance.exports.run_Wasmrs_App();
