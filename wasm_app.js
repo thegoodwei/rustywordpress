@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function() {
     run_Wasmjs_App();
 });
 
-async function run_Wasmrs_App() {
+async function run_Wasmjs_App() {
     // Instantiate the WebAssembly module
     const wasmModule = await init();
 const fullpage-app-div = document.getElementById("fullpage-wasm-app");
