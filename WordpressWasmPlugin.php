@@ -12,7 +12,7 @@ add_action( 'wp_enqueue_scripts', 'my_wasm_enqueue_scripts' );
 
 function my_wasm_shortcode() {
     echo '<div id="wasm-app" style="width: 100%; height: 100%;"></div>';
-    echo '<script>main();</script>';
+    echo '<script>run_Wasmjs_App();</script>';
 }
 add_shortcode( 'wasm_display', 'my_wasm_shortcode' );
 ?>
