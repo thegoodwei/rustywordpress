@@ -1,11 +1,17 @@
 <?php
-
+/**
+ * Plugin Name: wasm_module_plugin
+ * Plugin URI : storycoin.app
+ * Version : 0.0.0.0.1
+ * Date   : 2023-01-21 
+ * Description  : This file contains the code for creating a shortcode to display a wasm module in a WordPress page or post
+ */
 /*
  * Enqueue the wasm_app.js script to be used on the front-end of the website.
  * This script is located in the 'js' folder within the plugin directory.
  */
 function my_wasm_enqueue_scripts() {
-    wp_enqueue_script( 'wasm_app', plugins_url( 'wasm_glue.js', __FILE__ ) );
+    wp_enqueue_script( 'wasm_plugin', plugins_url( 'wasm_module.js', __FILE__ ) );
 }
 add_action( 'wp_enqueue_scripts', 'my_wasm_enqueue_scripts' );
 
@@ -36,14 +42,15 @@ function my_wasm_shortcode()
                 // Else the fetch request was successful, return the response as an array buffer
     
                 // .then instantiate .then => Call the main function of the wasm module and pass in the appdiv element for the window
-    echo '<script>         
         // Get the div element with the id "fullpage-wasm-app"
+   
+    echo '<script>         
         const appdiv = document.getElementById("fullpage-wasm-app");
-        
+      if ("WebAssembly" in window) {
         fetch("./wasm_module.wasm")
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`Try using Firefox!! Your browser failed to fetch wasm_module.wasm. Status: ${response.status}`);
+                    throw new Error("Try using Firefox!! Your browser failed to fetch wasm_module.wasm. Status: ${response.status}");
                 } else {
                 return response.arrayBuffer(); }
             })
@@ -52,6 +59,7 @@ function my_wasm_shortcode()
                 instance.exports.main(appdiv);
             })
             .catch(error => console.error(error));
+        }else{ throw new Error("There is no WebAssembly in Window")};
     </script>';
 }
 // Add the shortcode [wasm_display] to WordPress
